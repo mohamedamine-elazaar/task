@@ -18,15 +18,21 @@ const { notFound, errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 
-// Connect to MongoDB
-connectDB().catch((err) => {
-  console.error("Failed to connect to MongoDB:", err);
-});
-
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
+
+// Ensure DB is connected for every request (Serverless fix)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("Database connection failed:", err);
+    res.status(500).json({ message: "Database connection failed" });
+  }
+});
 
 // Health check
 app.get("/api/health", (_req, res) => {
