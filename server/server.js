@@ -20,7 +20,6 @@ const app = express();
 // Connect to MongoDB
 connectDB().catch((err) => {
   console.error("Failed to connect to MongoDB:", err);
-  process.exit(1);
 });
 
 // Middleware
@@ -56,7 +55,11 @@ app.use(notFound);
 app.use(errorHandler);
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
+
+module.exports = app;
