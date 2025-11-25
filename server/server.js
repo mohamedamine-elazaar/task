@@ -11,6 +11,7 @@ const dotenv = require("dotenv");
 // Load environment variables from .env if present
 dotenv.config({ path: path.join(__dirname, ".env") });
 
+const mongoose = require("mongoose");
 const { connectDB } = require("./config/db");
 const taskRoutes = require("./routes/taskRoutes");
 const { notFound, errorHandler } = require("./middleware/errorHandler");
@@ -29,7 +30,11 @@ app.use(morgan("dev"));
 
 // Health check
 app.get("/api/health", (_req, res) => {
-  res.json({ status: "ok" });
+  res.json({
+    status: "ok",
+    mongoState: mongoose.connection.readyState, // 0: disconnected, 1: connected, 2: connecting, 3: disconnecting
+    env: process.env.NODE_ENV
+  });
 });
 
 // Root info route (helps avoid 404 on '/')
