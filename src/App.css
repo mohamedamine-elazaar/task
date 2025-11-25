@@ -190,12 +190,12 @@
 
 .task-item__status:hover {
   border-color: var(--color-primary);
+}
+
 .task-item__title {
   min-width: 0;
   word-break: break-word;
 }
-
-.task-item__title h3 {
 
 .task-item__title h3 {
   margin: 0;
